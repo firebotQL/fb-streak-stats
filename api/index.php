@@ -24,7 +24,8 @@ if (!isset($_ENV["TOKEN"])) {
 $cacheSeconds = CACHE_DURATION;
 header("Expires: " . gmdate("D, d M Y H:i:s", time() + $cacheSeconds) . " GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: public, max-age=$cacheSeconds");
+// s-maxage lets Vercel's CDN serve cached cards, so function cold starts don't reach GitHub's image proxy
+header("Cache-Control: public, max-age=$cacheSeconds, s-maxage=$cacheSeconds, stale-while-revalidate=" . 7 * $cacheSeconds);
 
 // redirect to demo site if user is not given
 if (!isset($_REQUEST["user"])) {
